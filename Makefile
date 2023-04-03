@@ -1,10 +1,10 @@
 CXX = g++
 CXXFLAGS = -g -std=c++11 -Wall
 
-all: client server
+all: Client Server
 
-client: client.cpp
-	g++ -o client client.cpp
+client: Client.cpp
+	g++ -o Client Client.cpp
 
-server: server.cpp
-	g++ -o server server.cpp
+server: Server.cpp
+	g++ -o Server Server.cpp

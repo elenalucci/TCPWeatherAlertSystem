@@ -39,30 +39,65 @@ int main() {
 		cerr<< "Client could not connect to server\n";
 		exit(1);
 	}
+	else{
+		cout << "Connected\n\n";
+	}
 
 	int serverMessage;
+	bool userExists = false;
+	int selection;
+	std::string username;
+	std::string password;
 	while(1){
 
-		cout << endl << endl;
-
 		bzero(clientBuffer,2048);
+		if (userExists) {
+		// The client credentials are valid, so propose the available options
+    			cout << "Welcome, !\n";
+    			cout << "Available options:\n";
+    			cout << "1. Subscribe to a location\n";
+    			cout << "2. Unsubscribe from a location\n";
+    			cout << "3. See the online users\n";
+    			cout << "4. Send a message to a user\n";
+    			cout << "5. Send a group message to a location\n";
+    			cout << "6. See all the locations that you have subscribed to\n";
+    			cout << "7. See the last 10 messages received\n";
+    			cout << "8. Change password\n";
+    			cout << "9. Logout\n";
+		} else {
+    		// The client credentials are invalid, so re-propose the login options
+    			//cout << "Invalid username or password.\n";
+    			cout << "Please choose an option:\n";
+    			cout << "1. Login\n";
+    			cout << "2. Register\n";
+    			cout << "3. Quit\n";
+			cin >> selection;
+			cout << endl;
+
+			switch(selection){
+				case(1):
+					cout << "Enter username: ";
+					cin >> username;
+					cout << "\nEnter password: ";
+					cin >> password;
+					cout << endl;
+					break;
 		
-		while(1){
-
-		}
-
-		if(serverMessage <0){
-			cerr<< "Error on Send\n";
-		}
-
-		bzero(clientBuffer,2048);
-		serverMessage = recv(serverSocket,clientBuffer,sizeof(clientBuffer), 0);
-
-		if(serverMessage <0){
-			cerr << "Error on Receive\n";
-		}
+				case(2):
+					cout << "Enter username: ";
+                                        cin >> username;
+                                        cout << "\nEnter password: ";
+                                        cin >> password;
+                                        cout << endl;
+                                        break;
+				case(3):
+					exit(0);
+					break;
+			}
+		}		
 		
-		cout << "Receieved File Content: \n\n" << clientBuffer << "\n\n";
+
+			
 	}
 
 	close(serverSocket);

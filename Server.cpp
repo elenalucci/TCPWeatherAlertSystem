@@ -58,11 +58,11 @@ int main(){
 		cout<<"\nServer is listening and waiting for client\n";
 	}
 
-	if(pthread_mutex_init(&lock, NULL) != 0) {
+/*	if(pthread_mutex_init(&lock, NULL) != 0) {
 		cerr << "mutex init failed";
 		exit(1);
 	}
-
+*/
 	//Client Vars
 	socklen_t clientSocket;
 	struct sockaddr_in clientAddress;
@@ -84,9 +84,9 @@ int main(){
 
 	}
 	
-	pthread_t thread;
-	int* clientThread = new int;
-	*clientThread = newSocket;
+//	pthread_t thread;
+//	int* clientThread = new int;
+//	*clientThread = newSocket;
 
 		while(1){
 
