@@ -64,6 +64,33 @@ int main() {
     			cout << "7. See the last 10 messages received\n";
     			cout << "8. Change password\n";
     			cout << "9. Logout\n";
+			
+			cout << "Selection: ";
+			cin >> selection;
+			cout << endl;
+	
+			switch(selection){
+				case(1):
+					break;
+				case(2):
+					break;
+				case(3):
+					break;
+				case(4):
+					break;
+				case(5):
+					break;
+				case(6):
+					break;
+				case(7):
+					break;
+				case(8):
+					break;
+				case(9):
+					break;
+
+			}
+
 		} else {
     		// The client credentials are invalid, so re-propose the login options
     			//cout << "Invalid username or password.\n";
@@ -71,6 +98,8 @@ int main() {
     			cout << "1. Login\n";
     			cout << "2. Register\n";
     			cout << "3. Quit\n";
+
+			cout << "Selection: ";
 			cin >> selection;
 			cout << endl;
 
