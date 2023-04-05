@@ -102,30 +102,10 @@ int main(){
 
 		}	
 
-		cout << "File Requested From Client: " << serverBuffer << endl;
+		cout << "Command from client: " << serverBuffer << endl;
 
-
-		fileName = serverBuffer;
-
-		input.open(fileName, ios::in);
 		
-
-		if(!input.is_open()) {
-			cerr << "Error: could not open file " << fileName << endl;
-                	exit(1);
-        	}
-        	
-		string line;
-
-        	while(getline(input, line)) {
-
-                	message += line;
-
-        	}
-
-        	input.close();
 		
-		cout << "Sending file: " << serverBuffer << endl << endl;
 		int sendMessage = send(newSocket,message.c_str(),strlen(message.c_str()),0);
 		if(sendMessage < 0) {
 

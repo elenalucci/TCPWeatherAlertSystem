@@ -48,8 +48,9 @@ int main() {
 	int selection;
 	std::string username;
 	std::string password;
+	std::string selectionMessage;
 	while(1){
-
+		
 		bzero(clientBuffer,2048);
 		if (userExists) {
 		// The client credentials are valid, so propose the available options
@@ -110,6 +111,9 @@ int main() {
 					cout << "\nEnter password: ";
 					cin >> password;
 					cout << endl;
+					selectionMessage = "Login," + username + "," + password;
+					strcpy(clientBuffer,selectionMessage.c_str());
+					serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
 					break;
 		
 				case(2):
