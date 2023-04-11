@@ -48,6 +48,7 @@ int main() {
 	int selection;
 	std::string username;
 	std::string password;
+	std::string location;
 	std::string selectionMessage;
 	while(1){
 		
@@ -72,8 +73,20 @@ int main() {
 	
 			switch(selection){
 				case(1):
+					cout << "Insert the location you want to subscribe to: ";
+					cin >> location;
+					cout << endl;
+					selectionMessage = "Subscribe " +location;
+                                        strcpy(clientBuffer,selectionMessage.c_str());
+                                        serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
 					break;
 				case(2):
+					cout << "Insert the location you want to unsubscribe to: ";
+					cin >> location;
+					cout << endl;
+					selectionMessage = "Unsubscribe " + location;
+                                        strcpy(clientBuffer,selectionMessage.c_str());
+                                        serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
 					break;
 				case(3):
 					break;
@@ -111,7 +124,7 @@ int main() {
 					cout << "\nEnter password: ";
 					cin >> password;
 					cout << endl;
-					selectionMessage = "Login," + username + "," + password;
+					selectionMessage = "Login " + username + " " + password;
 					strcpy(clientBuffer,selectionMessage.c_str());
 					serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
 					break;
@@ -122,8 +135,14 @@ int main() {
                                         cout << "\nEnter password: ";
                                         cin >> password;
                                         cout << endl;
+					selectionMessage = "Register " + username + " " + password;
+                                        strcpy(clientBuffer,selectionMessage.c_str());
+                                        serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
                                         break;
 				case(3):
+					/*selectionMessage = "Quit";
+                                        strcpy(clientBuffer,selectionMessage.c_str());
+                                        serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);*/
 					exit(0);
 					break;
 			}

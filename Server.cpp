@@ -70,19 +70,16 @@ int main(){
 
 	clientSocket = sizeof(clientAddress);
 
-	while(true) {
-		newSocket = accept(serverSocket,(struct sockaddr*) &clientAddress, &clientSocket);	
+	newSocket = accept(serverSocket,(struct sockaddr*) &clientAddress, &clientSocket);	
 	
-		if(newSocket <0){
-			cerr<<"Server did not accept Client connection";
-			exit(1);
-		}
-		
-		else{
-			cout << "Client Connection Accepted\n";
-		}
-
+	if(newSocket <0){
+		cerr<<"Server did not accept Client connection";
+		exit(1);
 	}
+	else{
+		cout << "Client Connection Accepted\n";
+	}
+
 	
 //	pthread_t thread;
 //	int* clientThread = new int;
@@ -100,12 +97,39 @@ int main(){
 
 			cout << "Error on read" << endl;
 
-		}	
+		}
 
-		cout << "Command from client: " << serverBuffer << endl;
+		std::string tempString;
+		for(int i=0;i<2048;i++){
+			if(serverBuffer[i] == NULL){
+				break;
+			}
 
+			tempString += serverBuffer[i];
+		}
 		
+		std::string tempArr[10];
+		std::stringstream s(tempString);
+		std::string command;
+		int count = 0;
+		while(s >> command){
+			tempArr[count] = command;
+			count ++;
+		}
+
+		for(int i=0; i<(count+1);i++){
+			cout << tempArr[i] << endl;
+		}
 		
+		if(tempArr[0] == "Login"){
+			cout << "aye" << endl;
+		}
+		else if(tempArr[0] == "Register"){
+			cout << "yo" << endl;
+		}
+
+
+
 		int sendMessage = send(newSocket,message.c_str(),strlen(message.c_str()),0);
 		if(sendMessage < 0) {
 
