@@ -9,6 +9,8 @@
 #include <string>
 #include <unistd.h>
 
+#include "User.hpp"
+
 using namespace std;
 
 #define BUFFER_SIZE 2048
@@ -46,10 +48,10 @@ int main() {
 	int serverMessage;
 	bool userExists = false;
 	int selection;
-	std::string username;
-	std::string password;
-	std::string location;
-	std::string selectionMessage;
+//	std::string username;
+//	std::string password;
+//	std::string location;
+//	std::string selectionMessage;
 	while(1){
 		
 		bzero(clientBuffer,2048);
@@ -72,35 +74,65 @@ int main() {
 			cout << endl;
 	
 			switch(selection){
-				case(1):
-					cout << "Insert the location you want to subscribe to: ";
-					cin >> location;
-					cout << endl;
-					selectionMessage = "Subscribe " +location;
-                                        strcpy(clientBuffer,selectionMessage.c_str());
-                                        serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
+				case(1): {
+					string location;
+               	 			cout << "Enter the location you want to subscribe to: ";
+                			getline(cin, location);
+					vector<string> locations = {location};
+					subscribeLocation(locations);
 					break;
-				case(2):
-					cout << "Insert the location you want to unsubscribe to: ";
-					cin >> location;
-					cout << endl;
-					selectionMessage = "Unsubscribe " + location;
-                                        strcpy(clientBuffer,selectionMessage.c_str());
-                                        serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
+				}
+				case(2): {
+					string location;
+                			cout << "Enter the location you want to unsubscribe to: ";
+                			getline(cin, location);
+					
+					unsubscribeLocation(location);
 					break;
-				case(3):
+				}
+				case(3): {
 					break;
-				case(4):
+				}
+				case(4): {
 					break;
-				case(5):
+				}
+				case(5): {
 					break;
-				case(6):
+				}
+				case(6): {
+					const vector<string>& locations = getLocations();
+					cout << "Subscribed Locations:\n";
+					for(const auto& location : locations) {
+						cout << location << endl;
+					}
 					break;
-				case(7):
+				}
+				case(7): {
 					break;
-				case(8):
+				}
+				case(8): {
+					string oldPassword, newPassword;
+					cout << "Enter old password: ";
+					getline(cin, oldPassword);
+
+					cout << "Enter new password: ";
+					getline(cin, newPassword);
+
+					bool passwordChanged = changePassword(oldPassword, newPassword);
+					if(passwordChanged) {
+						cout << "Successfull!" << endl;
+					}
+					else {
+						cout << "Failed!" << endl;
+					}
 					break;
-				case(9):
+				}
+				case(9): {
+					logout();
+					break;
+				}
+				default:
+					cout << "Invalid choice." << endl;
 					break;
 
 			}
@@ -118,32 +150,34 @@ int main() {
 			cout << endl;
 
 			switch(selection){
-				case(1):
-					cout << "Enter username: ";
-					cin >> username;
-					cout << "\nEnter password: ";
-					cin >> password;
-					cout << endl;
-					selectionMessage = "Login " + username + " " + password;
-					strcpy(clientBuffer,selectionMessage.c_str());
-					serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
+				case(1): {
+					bool loginSuccessful = login(password);
+					if(loginSuccessful) {
+						cout << "Successful!" << endl;
+					}
+
+					else {
+						cout << "Failed!" << endl;
+					}
 					break;
-		
-				case(2):
-					cout << "Enter username: ";
-                                        cin >> username;
-                                        cout << "\nEnter password: ";
-                                        cin >> password;
-                                        cout << endl;
-					selectionMessage = "Register " + username + " " + password;
-                                        strcpy(clientBuffer,selectionMessage.c_str());
-                                        serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
+				}
+				case(2): {
+					bool registrationSuccessful = registerUser(password);
+					if(registrationSuccessful) {
+						cout << "Successful!" << endl;
+					}
+
+					else {
+						cout << "Failed!" << endl;
+					}
                                         break;
-				case(3):
-					/*selectionMessage = "Quit";
-                                        strcpy(clientBuffer,selectionMessage.c_str());
-                                        serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);*/
+				}
+				case(3): {
 					exit(0);
+					break;
+				}
+				default:
+					cout << "Invalid choice." << endl;
 					break;
 			}
 		}		
