@@ -14,7 +14,6 @@
 #include <algorithm>
 #include <sstream>
 #include <vector>
-#include "TCPClient.hpp"
 
 #define PORTNUM 60002
 
@@ -82,7 +81,6 @@ int main(){
 	}
 
 	
-	TCPClient tcp;
 //	pthread_t thread;
 //	int* clientThread = new int;
 //	*clientThread = newSocket;
@@ -124,10 +122,26 @@ int main(){
 		}
 		
 		if(tempArr[0] == "Login"){
-			string s1 = tempArr[1];
-			string s2 = tempArr[2];
-
-			tcp.login(s1,s2);
+			bool foundUser = false;
+			ifstream in ("usernames.txt");
+			string line;
+			int pos;
+			string s1,s2;
+			while(getline(in,line)){
+				pos = line.find(',');
+				s1 = line.substr(0,pos);
+				s2 = line.substr((pos+1),line.length());
+				if(s1 == tempArr[1] && s2 == tempArr[2]){
+					foundUser = true;
+					cout << "username found" << endl;
+					message = "true";
+				}
+			}
+			if(!foundUser){
+				cout << "username not found" << endl;
+				message = "false";
+			}
+			
 		}
 		else if(tempArr[0] == "Register"){
 			cout << "yo" << endl;

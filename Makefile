@@ -1,10 +1,7 @@
 CXX = g++
 CXXFLAGS = -g -std=c++11 -Wall
 
-all: Client Server TCPClient
-
-tcpClient:
-	g++ -o TCPClient TCPClient.cpp
+all: Client Server
 
 client: Client.cpp
 	g++ -o Client Client.cpp

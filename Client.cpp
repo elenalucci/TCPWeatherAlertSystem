@@ -55,6 +55,7 @@ int main() {
 
 	while(1){
 		
+
 		bzero(clientBuffer,2048);
 		if (userExists) {
 		// The client credentials are valid, so propose the available options
@@ -73,7 +74,7 @@ int main() {
 			cout << "Selection: ";
 			cin >> selection;
 			cout << endl;
-	
+		while(1){	
 			switch(selection){
 				case(1): {
 					string location;
@@ -124,6 +125,7 @@ int main() {
 					break;
 
 			}
+		}
 
 		} else {
     		// The client credentials are invalid, so re-propose the login options
@@ -136,7 +138,7 @@ int main() {
 			cout << "Selection: ";
 			cin >> selection;
 			cout << endl;
-
+		while(1){
 			switch(selection){
 				case(1): {
 					cout << "Enter username: ";
@@ -148,6 +150,8 @@ int main() {
 					selectionMessage = "Login " + username + " " + password;
 					strcpy(clientBuffer,selectionMessage.c_str());
 					serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
+					
+
 					break;
 				}
 				case(2): {
@@ -169,10 +173,14 @@ int main() {
 					cout << "Invalid choice." << endl;
 					break;
 			}
+		}
+		
+		bzero(clientBuffer,2048);
+		serverMessage = recv(serverSocket,clientBuffer,sizeof(clientBuffer), 0);
+
 		}		
 		
 
-			
 	}
 
 	close(serverSocket);
