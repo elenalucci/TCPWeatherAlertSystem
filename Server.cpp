@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <sstream>
 #include <vector>
+#include "TCPClient.hpp"
 
 #define PORTNUM 60002
 
@@ -81,6 +82,7 @@ int main(){
 	}
 
 	
+	TCPClient tcp;
 //	pthread_t thread;
 //	int* clientThread = new int;
 //	*clientThread = newSocket;
@@ -122,7 +124,10 @@ int main(){
 		}
 		
 		if(tempArr[0] == "Login"){
-			cout << "aye" << endl;
+			string s1 = tempArr[1];
+			string s2 = tempArr[2];
+
+			tcp.login(s1,s2);
 		}
 		else if(tempArr[0] == "Register"){
 			cout << "yo" << endl;
