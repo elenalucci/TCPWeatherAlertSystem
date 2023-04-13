@@ -120,7 +120,9 @@ int main(){
 		for(int i=0; i<(count+1);i++){
 			cout << tempArr[i] << endl;
 		}
-		
+
+		string message = "";
+
 		if(tempArr[0] == "Login"){
 			bool foundUser = false;
 			ifstream in ("usernames.txt");
