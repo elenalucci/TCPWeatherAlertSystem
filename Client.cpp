@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <string>
 #include <unistd.h>
+#include <sstream>
 
 #include "User.hpp"
 
@@ -21,8 +22,8 @@ int main() {
 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	
 	char clientBuffer[2048];
-	struct hostent *server;
-	
+	struct hostent *server;	
+
 	string fileName;
 
 	if(serverSocket < 0) {
@@ -118,7 +119,7 @@ int main() {
 					break;
 				}
 				case(9): {
-					
+					exit(1);
 					break;
 				}
 				default: {
@@ -174,18 +175,48 @@ int main() {
 					exit(0);
 					break;
 				}
+				else{
+					cout << "Invalid Option" << endl;
+					selectionMessage = "Invalid";
+                                        strcpy(clientBuffer,selectionMessage.c_str());
+					serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
+					break;
+				}
 				
 		}
 		
 		bzero(clientBuffer,2048);
 		serverMessage = recv(serverSocket,clientBuffer,sizeof(clientBuffer), 0);
-		cout << clientBuffer << endl;
 		
-		
+		std::string tempString;
+                for(int i=0;i<2048;i++){
+                        if(clientBuffer[i] == NULL){
+                                break;
+                        }
 
+                        tempString += clientBuffer[i];
+                }
+
+		std::string tempArr[10];
+                std::stringstream s(tempString);
+                std::string command;
+                int count = 0;
+                while(s >> command){
+                        tempArr[count] = command;
+                        count ++;
+                }
+		
+		if(tempArr[0] == "Login" && tempArr[1] == "true"){
+			cout << "Login Successful!" << endl;
+			userExists = true;
+
+		}
+		else if(tempArr[0] == "Login" && tempArr[1] == "false"){
+			cout << "Login attempt failed" << endl;
+			userExists = false;
 		}		
 		
-
+		}
 	}
 
 	close(serverSocket);

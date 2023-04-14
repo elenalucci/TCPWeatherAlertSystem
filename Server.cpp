@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <sstream>
 #include <vector>
+#include "User.hpp"
 
 #define PORTNUM 60002
 
@@ -125,7 +126,8 @@ int main(){
 
 		if(tempArr[0] == "Login"){
 			bool foundUser = false;
-			ifstream in ("usernames.txt");
+			ifstream in;
+			in.open("usernames.txt");
 			string line;
 			int pos;
 			string s1,s2;
@@ -136,22 +138,53 @@ int main(){
 				if(s1 == tempArr[1] && s2 == tempArr[2]){
 					foundUser = true;
 					cout << "username found" << endl;
-					message = "true";
+					message = "Login true";
 				}
 			}
 			if(!foundUser){
 				cout << "username not found" << endl;
-				message = "false";
+				message = "Login false";
 			}
+			in.close();
 			
 		}
 		else if(tempArr[0] == "Register"){
-			cout << "yo" << endl;
+			bool foundUser = false;
+			ifstream in;
+			in.open("usernames.txt");
+                        string line;
+                        int pos;
+                        string s1,s2;
+                        while(getline(in,line)){
+                                pos = line.find(',');
+                                s1 = line.substr(0,pos);
+                                if(s1 == tempArr[1]){
+					foundUser = true;
+					message = "Register false";	
+					cout << message << endl;
+					break;
+				}
+			}
+			in.close();
+			if(!foundUser){
+                        	ofstream out("usernames.txt",std::ios_base::app);
+                        	out <<tempArr[1] << "," << tempArr[2] << endl;
+                        	out.close();
+                        	message = "Register true";
+				cout << message << endl;
+			}
+                        
+		}
+		else if(tempArr[0] == "Invalid"){
+			message = "Invalid";
 		}
 
-
+		
 
 		int sendMessage = send(newSocket,message.c_str(),strlen(message.c_str()),0);
+		
+
+
 		if(sendMessage < 0) {
 
 			cout << "Error on send" << endl;
