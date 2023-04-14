@@ -81,7 +81,7 @@ int main(){
 		cout << "Client Connection Accepted\n";
 	}
 
-	
+		
 //	pthread_t thread;
 //	int* clientThread = new int;
 //	*clientThread = newSocket;
@@ -177,6 +177,10 @@ int main(){
 		}
 		else if(tempArr[0] == "Invalid"){
 			message = "Invalid";
+		}
+		else if(tempArr[0] == "addLocation"){
+			cout << "aye yo" << endl;
+			message = "addLocation";
 		}
 
 		

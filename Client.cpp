@@ -60,7 +60,7 @@ int main() {
 		bzero(clientBuffer,2048);
 		if (userExists) {
 		// The client credentials are valid, so propose the available options
-    			cout << "Welcome, !\n";
+    			cout << "Welcome, " << username << "!\n";
     			cout << "Available options:\n";
     			cout << "1. Subscribe to a location\n";
     			cout << "2. Unsubscribe from a location\n";
@@ -77,60 +77,64 @@ int main() {
 			cin >> selection;
 			cout << endl;
 			
-			switch(selection){
-				case(1): {
-					string location;
-               	 			cout << "Enter the location you want to subscribe to: ";
-                			
-					break;
-				}
-				case(2): {
-					string location;
-                			cout << "Enter the location you want to unsubscribe to: ";
-                			//getline(cin, location);
-					
-					break;
-				}
-				case(3): {
-					break;
-				}
-				case(4): {
-					break;
-				}
-				case(5): {
-					break;
-				}
-				case(6): {
-					cout << "Subscribed Locations:\n";
-					
-					break;
-				}
-				case(7): {
-					break;
-				}
-				case(8): {
-					string oldPassword, newPassword;
-					cout << "Enter old password: ";
-					getline(cin, oldPassword);
-
-					cout << "Enter new password: ";
-					getline(cin, newPassword);
-					
-					break;
-				}
-				case(9): {
-					exit(1);
-					break;
-				}
-				default: {
-					cout << "Invalid choice." << endl;
-					break;
-				}
+			if(selection == 1){
+				string location;
+               	 		cout << "Enter the location you want to subscribe to: ";
+                		cin >> location;
+				cout << endl;
 				
+				selectionMessage = "addLocation " + location;
+                                strcpy(clientBuffer,selectionMessage.c_str());
+                                serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
+
 				break;
-			
+				}
+			else if(selection ==2){
+				string location;
+                		cout << "Enter the location you want to unsubscribe to: ";
+					
+				break;
 			}
+			else if(selection == 3){
+				break;
+			}
+			else if(selection == 4){
+				break;
+			}
+			else if(selection == 5){
+				break;
+			}
+			else if(selection == 6){
+				cout << "Subscribed Locations:\n";
+					
+				break;
+			}
+			else if(selection == 7){
+				break;
+			}
+			else if(selection == 8){
+				string oldPassword, newPassword;
+				cout << "Enter old password: ";
+
+				cout << "Enter new password: ";
+					
+				break;
+			}
+			else if(selection == 9){
+				exit(1);
+				break;
+			}
+			else{
+				cout << "Invalid Option" << endl;
+                                selectionMessage = "Invalid";
+                                strcpy(clientBuffer,selectionMessage.c_str());
+                                serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
+				break;
+			}
+			break;	
+			
 		}
+	
 
 		} else {
     		// The client credentials are invalid, so re-propose the login options
@@ -184,10 +188,10 @@ int main() {
 				}
 				
 		}
-		
+		}
 		bzero(clientBuffer,2048);
 		serverMessage = recv(serverSocket,clientBuffer,sizeof(clientBuffer), 0);
-		
+		cout << clientBuffer << endl;	
 		std::string tempString;
                 for(int i=0;i<2048;i++){
                         if(clientBuffer[i] == NULL){
@@ -216,7 +220,7 @@ int main() {
 			userExists = false;
 		}		
 		
-		}
+		
 	}
 
 	close(serverSocket);
