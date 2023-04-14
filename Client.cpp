@@ -70,11 +70,12 @@ int main() {
     			cout << "7. See the last 10 messages received\n";
     			cout << "8. Change password\n";
     			cout << "9. Logout\n";
-			
+		
+		while(1){	
 			cout << "Selection: ";
 			cin >> selection;
 			cout << endl;
-		while(1){	
+			
 			switch(selection){
 				case(1): {
 					string location;
@@ -120,27 +121,31 @@ int main() {
 					
 					break;
 				}
-				default:
+				default: {
 					cout << "Invalid choice." << endl;
 					break;
-
+				}
+				
+				break;
+			
 			}
 		}
 
 		} else {
     		// The client credentials are invalid, so re-propose the login options
     			//cout << "Invalid username or password.\n";
-    			cout << "Please choose an option:\n";
+    		while(1){
+			cout << "Please choose an option:\n";
     			cout << "1. Login\n";
     			cout << "2. Register\n";
     			cout << "3. Quit\n";
-
+		
+		
 			cout << "Selection: ";
 			cin >> selection;
 			cout << endl;
-		while(1){
-			switch(selection){
-				case(1): {
+		
+				if(selection==1) {
 					cout << "Enter username: ";
 					cin >> username;
 					cout << "\nEnter password: ";
@@ -154,7 +159,7 @@ int main() {
 
 					break;
 				}
-				case(2): {
+				else if(selection == 2){
 					cout << "Enter username: ";
                                         cin >> username;
                                         cout << "\nEnter password: ";
@@ -165,18 +170,18 @@ int main() {
                                         serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);
                                         break;
 				}
-				case(3): {
+				else if (selection == 3){
 					exit(0);
 					break;
 				}
-				default:
-					cout << "Invalid choice." << endl;
-					break;
-			}
+				
 		}
 		
 		bzero(clientBuffer,2048);
 		serverMessage = recv(serverSocket,clientBuffer,sizeof(clientBuffer), 0);
+		cout << clientBuffer << endl;
+		
+		
 
 		}		
 		
