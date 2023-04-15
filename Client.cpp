@@ -9,6 +9,7 @@
 #include <string>
 #include <unistd.h>
 #include <sstream>
+#include <fstream>
 
 #include "User.hpp"
 
@@ -88,9 +89,15 @@ int main() {
 
 					break;
 				}
-				else if(selection ==2){
+				else if(selection == 2){
 					string location;
                 			cout << "Enter the location you want to unsubscribe to: ";
+					cin >> location;
+					cout << endl;
+
+					selectionMessage = "removeLocation " + location;
+					strcpy(clientBuffer, selectionMessage.c_str());
+					serverMessage = send(serverSocket, clientBuffer, strlen(clientBuffer), 0);
 
 					break;
 				}
@@ -104,19 +111,41 @@ int main() {
 					break;
 				}
 				else if(selection == 6){
-					cout << "Subscribed Locations:\n";
-					
+					cout << "Displaying all subscribed Locations:\n";
+
+					selectionMessage = "displaying";
+					strcpy(clientBuffer, selectionMessage.c_str());
+					serverMessage = send(serverSocket, clientBuffer, strlen(clientBuffer), 0);
+						
+					ifstream in("locations.txt");
+					string line;
+					while(getline(in, line)) {
+						cout << line << endl;
+					}	
+					in.close();
+							
 					break;
 				}
 				else if(selection == 7){
 					break;
 				}
 				else if(selection == 8){
-					string oldPassword, newPassword;
-					cout << "Enter old password: ";
+					string username, currentPassword, newPassword;
+					
+					cout << "Enter your username: ";
+					cin >> username;
+
+					cout << "Enter current password: ";
+					cin >> currentPassword;
 
 					cout << "Enter new password: ";
-					
+					cin >> newPassword;
+					cout << endl;
+
+					selectionMessage = "changePassword " + username + " " + currentPassword + " " + newPassword;
+					strcpy(clientBuffer,selectionMessage.c_str());
+					serverMessage = send(serverSocket,clientBuffer,strlen(clientBuffer),0);                             
+				
 					break;
 				}
 				else if(selection == 9){
@@ -218,7 +247,6 @@ int main() {
 			cout << "Login attempt failed" << endl;
 			userExists = false;
 		}		
-		
 		
 	}
 

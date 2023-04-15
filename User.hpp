@@ -14,17 +14,10 @@ struct UserInfo {
 	vector<string> subscribedLocations;
 };
 
-struct Message {
-	string sender;
-	string content;
-	string sendTo;
-};
-
 class User {
 	private:
 		map<string, UserInfo> registeredUsers;
 		vector<string> onlineUsers;
-		vector<Message> log;
 	public:
 		void registerUser();
 		void login();
