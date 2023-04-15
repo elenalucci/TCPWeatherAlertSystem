@@ -15,8 +15,6 @@
 #include <sstream>
 #include <vector>
 
-#include "User.hpp"
-
 #define PORTNUM 60002
 
 using namespace std;
@@ -57,7 +55,7 @@ int main(){
 		exit(1);
 	}
 	else{
-		cout<<"\nServer is listening and waiting for client\n";
+		cout<<"\nServer is listening and waiting for client\n\n";
 	}
 
 	//Client Vars
@@ -79,7 +77,7 @@ int main(){
 
 		while(1){
 
-		int messageNum, n;
+		int  n;
 
 		bzero(serverBuffer,2048);
 		
@@ -93,7 +91,7 @@ int main(){
 
 		std::string tempString;
 		for(int i=0;i<2048;i++){
-			if(serverBuffer[i] == NULL){
+			if(serverBuffer[i] == '\0'){
 				break;
 			}
 
@@ -107,10 +105,6 @@ int main(){
 		while(s >> command){
 			tempArr[count] = command;
 			count ++;
-		}
-
-		for(int i=0; i<(count+1);i++){
-			cout << tempArr[i] << endl;
 		}
 
 		string message = "";
@@ -128,11 +122,13 @@ int main(){
 				s2 = line.substr((pos+1),line.length());
 				if(s1 == tempArr[1] && s2 == tempArr[2]){
 					foundUser = true;
+					cout << endl;
 					cout << "Username found!" << endl;
 					message = "Login true";
 				}
 			}
 			if(!foundUser){
+				cout << endl;
 				cout << "Username was not found." << endl;
 				message = "Login false";
 			}
@@ -151,17 +147,16 @@ int main(){
                                 s1 = line.substr(0,pos);
                                 if(s1 == tempArr[1]){
 					foundUser = true;
-					message = "Register false";	
+					message = "Registration was not successful.\n";	
 					break;
 				}
 			}
 			in.close();
 			if(!foundUser){
-                        	ofstream out("usernames.txt",std::ios_base::app);
+                        	ofstream out("usernames.txt",ios::app);
                         	out <<tempArr[1] << "," << tempArr[2] << endl;
                         	out.close();
-                        	message = "Register true";
-				cout << message << endl;
+                        	message = "Registrations was successful!\n";
 			}
                         
 		}
@@ -169,6 +164,7 @@ int main(){
 			message = "Invalid";
 		}
 		else if(tempArr[0] == "addLocation"){
+			cout << endl;
 			cout << "Subscribing to location: " << tempArr[1] << endl;
 			
 			ifstream in("locations.txt");
@@ -185,19 +181,21 @@ int main(){
 			in.close();
 			
 			if(locationExists) {
+				cout << endl;
 				cout << "You are already subscribed to that location." << endl;
-				message = "Location exists";
+				message = "Location has already been subscribed to.\n";
 			} else {
 
 				ofstream out("locations.txt", ios::app);
 				out << tempArr[1] << endl;
 				out.close();
 
-				message = "Added location.";
+				message = "Added location.\n";
 			}
 		}
 
 		else if(tempArr[0] == "removeLocation") {
+			cout << endl;
 			cout << "Unsubscribing from location: " << tempArr[1] << endl;
 			bool foundLocation = false;
 			ifstream in("locations.txt");
@@ -219,26 +217,31 @@ int main(){
 			if(foundLocation) {
 				remove("Locations.txt");
 				rename("temp.txt", "locations.txt");
+				message = "Location has been removed.\n";
 			} else {
 				remove("temp.txt");
-				cout << "Location not found." << endl;
+				cout << "Location not found." << endl << endl;
+				message = "Location was not found.\n";
 			}
 		}
 
 		else if(tempArr[0] == "displaying") {
-			cout << "Displaying all subscribed locations: " << endl;
+			cout << endl;
+			cout << "Displaying all subscribed locations: " << endl << endl;
 
 			ifstream in("locations.txt");
 
 			string line;
 
 			while(getline(in, line)) {
-				cout << line << endl;
+				cout << "\t* " << line << endl << endl;
+				message = "Displaying all locations subscribed to complete!";
 			}
 			in.close();
 		}
 
 		else if(tempArr[0] == "changePassword") {
+			cout << endl;
 			cout << "Changing passsword." << endl;
 
 			bool foundUser = false;
@@ -261,9 +264,9 @@ int main(){
 					password = line.substr(pos + 1);
 					if(password == tempArr[2]) {
 						out << tempArr[1] << "," << tempArr[3] << endl;
-						message = "Password changed";
+						message = "Password has been changed!\n";
 					} else {
-						message = "Incorrect current password";
+						message = "Incorrect current password.\n";
 					}
 				} else {
 					out << line << endl;
@@ -274,13 +277,11 @@ int main(){
 			out.close();	
 
 			if(!foundUser) {
-				message = "Invalid username";
+				message = "Invalid username.\v";
 			}
 
 			remove("usernames.txt");
 			rename("tempPass.txt", "usernames.txt");
-			
-			
 		}
 
 		int sendMessage = send(newSocket,message.c_str(),strlen(message.c_str()),0);

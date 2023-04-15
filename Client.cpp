@@ -11,8 +11,6 @@
 #include <sstream>
 #include <fstream>
 
-#include "User.hpp"
-
 using namespace std;
 
 #define BUFFER_SIZE 2048
@@ -23,8 +21,7 @@ int main() {
 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	
 	char clientBuffer[2048];
-	struct hostent *server;	
-
+	struct hostent *server;
 	string fileName;
 
 	if(serverSocket < 0) {
@@ -60,17 +57,17 @@ int main() {
 		bzero(clientBuffer,2048);
 		if (userExists) {
 		// The client credentials are valid, so propose the available options
-    			cout << "Welcome, " << username << "!\n";
-    			cout << "Available options:\n";
-    			cout << "1. Subscribe to a location\n";
-    			cout << "2. Unsubscribe from a location\n";
-    			cout << "3. See the online users\n";
-    			cout << "4. Send a message to a user\n";
-    			cout << "5. Send a group message to a location\n";
-    			cout << "6. See all the locations that you have subscribed to\n";
-    			cout << "7. See the last 10 messages received\n";
-    			cout << "8. Change password\n";
-    			cout << "9. Logout\n";
+    			cout << "Welcome, " << username << "!\n\n";
+    			cout << "Available options:\n\n";
+    			cout << "\t1. Subscribe to a location\n";
+    			cout << "\t2. Unsubscribe from a location\n";
+    			cout << "\t3. See the online users\n";
+    			cout << "\t4. Send a message to a user\n";
+    			cout << "\t5. Send a group message to a location\n";
+    			cout << "\t6. See all the locations that you have subscribed to\n";
+    			cout << "\t7. See the last 10 messages received\n";
+    			cout << "\t8. Change password\n";
+    			cout << "\t9. Logout\n\n";
 		
 			while(1){	
 				cout << "Selection: ";
@@ -80,7 +77,7 @@ int main() {
 				if(selection == 1){
 					string location;
                	 			cout << "Enter the location you want to subscribe to: ";
-                			cin >> location;
+					cin >> location;
 					cout << endl;
 				
 					selectionMessage = "addLocation " + location;
@@ -117,13 +114,6 @@ int main() {
 					strcpy(clientBuffer, selectionMessage.c_str());
 					serverMessage = send(serverSocket, clientBuffer, strlen(clientBuffer), 0);
 						
-					ifstream in("locations.txt");
-					string line;
-					while(getline(in, line)) {
-						cout << line << endl;
-					}	
-					in.close();
-							
 					break;
 				}
 				else if(selection == 7){
@@ -168,10 +158,10 @@ int main() {
 		else {
     		// The client credentials are invalid, so re-propose the login options
     			while(1){
-				cout << "Please choose an option:\n";
-    				cout << "1. Login\n";
-    				cout << "2. Register\n";
-    				cout << "3. Quit\n";
+				cout << "Please choose an option:\n\n";
+    				cout << "\t1. Login\n";
+    				cout << "\t2. Register\n";
+    				cout << "\t3. Quit\n" << endl;
 		
 		
 				cout << "Selection: ";
@@ -222,7 +212,7 @@ int main() {
 		std::string tempString;
                 
 		for(int i=0;i<2048;i++){
-                        if(clientBuffer[i] == NULL){
+                        if(clientBuffer[i] == '\0'){
                                 break;
                         }
 
