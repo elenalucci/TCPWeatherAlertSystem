@@ -1,87 +1,142 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <map>
+#include <fstream>
+#include <sstream>
 
 #include "User.hpp"
 
 using namespace std;
 
-class User {
+void User::registerUser() {
+	UserInfo newUser;
+	string username;
+	string password;
 
-	User(const string& username, const string& password, int socketNo) 
-		: userName(username), passWord(password), socketNO(socketNo) {
+	cout << "Please enter a new username: ";
+	cin >> username;
+	newUser.username = username;
 
-	}
+	cout << "Please enter a new password: ";
+	cin >> password;
+	newUser.password = password;
 
-	const string& getUsername() const {
-		return userName;
-	}
+	registeredUsers.insert(pair<string, UserInfo>(username, newUser));
 
-	bool login(const string& password) {
-		if(passWord == password) {
-			loggedIn = true;
-			cout << "User: " << userName << " is logged in!\n\n";
-			return true;
+	ofstream out;
+	out.open("usernames.txt", ios::app);
+	out <<username << "," << password << endl;
+	out.close();
+
+	cout << "Registration successful!\n";
+}
+
+void User::login() {
+	string username;
+	string password;
+	bool foundUser = false;
+	ifstream in("usernames.txt");
+
+	cout << "Username: ";
+	cin >> username;
+
+	cout << "Password: ";
+	cin >> password;
+
+	if(in.is_open()) {
+		string line;
+		while(getline(in, line)) {
+			stringstream ss(line);
+			string user;
+			string pass;
+			getline(ss, user, ',');
+			getline(ss, pass);
+
+			if(user == username && pass == password) {
+				foundUser = true;
+				cout << "Login successful!" << endl;
+				onlineUsers.push_back(username);
+				break;
+			}
 		}
-		cout << "Login failed for user: " << userName << "\n\n";
-		return false;
+		in.close();
 	}
-
-	void logout() {
-		loggedIn = false;
-		cout << "User: " << userName << " has been logged out\n";
+	if(!foundUser) {
+		cout << "Invalid username or password." << endl;
 	}
+}
 
-	bool registerUser(const string& password) {
-		if(registered) {
-			cout << "User " << userName << " is already registered.\n";
-			return false;
+void User::logout(string username) {
+	vector<string>::iterator it = find(onlineUsers.begin(), onlineUsers.end(), username);
+	if(it != onlineUsers.end()) {
+		onlineUsers.erase(it);
+		cout << "Logout successful!" << endl;
+	} else {
+		cout << "User is not logged in." << endl;
+	}
+}
+
+void User::changePassword(string username) {
+	if(registeredUsers.find(username) == registeredUsers.end()) {
+		cout << "User not found." << endl;
+		return;
+	}
+	string currentPassword;
+	string newPassword;
+
+	cout << "Please enter your current password: ";
+	cin >> currentPassword;
+
+	ifstream in("usernames.txt");
+	string line;
+
+	bool foundUser = false;
+	while(getline(in, line)) {
+		stringstream ss(line);
+		string user;
+		string pass;
+		getline(ss, user, ',');
+		getline(ss, pass);
+
+		if(user == username && pass == currentPassword) {
+			foundUser = true;
+			break;
 		}
-		passWord = password;
-		registered = true;
-		cout << "User " << userName << " registered\n";
-		return true;
 	}
+	in.close();
 
-	bool changePassword(const string& oldPassword, const string& newPassword) {
-		if(loggedIn && passWord == oldPassword) {
-			passWord = newPassword;
-			cout << "Password changed.\n";
-			return true;
+	if(!foundUser) {
+		cout << "Invalid password. Please try again." << endl;
+		return;
+	}
+	cout << "Please enter your new password: ";
+	cin >> newPassword;
+
+	registeredUsers[username].password = newPassword;
+
+	ofstream out("usernames.txt");
+
+	if(out.is_open()) {
+		for(auto it : registeredUsers) {
+			cout << it.second.username << "," << it.second.password << endl;
 		}
-		cout << "Password change failed.\n";
-		return false;
+		out.close();
+	} else {
+		cout << "Unable to open file." << endl;
+		return;
 	}
+	cout << "Password changed successfully!" << endl;
+}
 
-	void subscribeLocation(const string& location) {
-		auto it = find(location.begin(), location.end(), loc);
-		if(it == location.end()) {
-			location.push_back(loc);
-			cout << "User: " << userName << " is subscribed to " << loc << "\n";
-		}
-	}
+void User::subscribeLocation(string username) {
 
-	void unsubscribeLocation(const string& location) {
-		auto it = find(location.begin(), location.end(), loc);
-		if(it != location.end()) {
-			location.erase(it);
-			cout << "User: " << userName << " is unsubscribed from " << loc << "\n";
-		}
-	}
+}
 
-	const vector<string>& getLocations() const {
-		return location;
-	}
+void User::unsubscribeLocation(string username) {
 
-	int getSocetNo() const {
-		return socketNO;
-	}
+}
 
-	void sendMessage(const string& message) {
-		messages.push_back(message);
-	}
+void User::showSubscribed(string username) {
 
-	const vector<string>& getMessages() const {
-		return messages;
-	}
-
+}
